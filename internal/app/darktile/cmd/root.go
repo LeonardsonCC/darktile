@@ -7,28 +7,30 @@ import (
 	"os"
 	"time"
 
+	"github.com/spf13/cobra"
+
 	"github.com/liamg/darktile/internal/app/darktile/config"
 	"github.com/liamg/darktile/internal/app/darktile/gui"
 	"github.com/liamg/darktile/internal/app/darktile/hinters"
 	"github.com/liamg/darktile/internal/app/darktile/termutil"
 	"github.com/liamg/darktile/internal/app/darktile/version"
-	"github.com/spf13/cobra"
 )
 
-var rewriteConfig bool
-var debugFile string
-var initialCommand string
-var shell string
-var screenshotAfterMS int
-var screenshotFilename string
-var themePath string
-var showVersion bool
+var (
+	rewriteConfig      bool
+	debugFile          string
+	initialCommand     string
+	shell              string
+	screenshotAfterMS  int
+	screenshotFilename string
+	themePath          string
+	showVersion        bool
+)
 
 var rootCmd = &cobra.Command{
 	Use:          os.Args[0],
 	SilenceUsage: true,
-	RunE: func(c *cobra.Command, args []string) error {
-
+	RunE: func(_ *cobra.Command, _ []string) error {
 		if showVersion {
 			fmt.Println(version.Version)
 			os.Exit(0)

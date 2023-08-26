@@ -3,8 +3,8 @@ package termutil
 import "image/color"
 
 type Cell struct {
-	r    MeasuredRune
 	attr CellAttributes
+	r    MeasuredRune
 }
 
 func (cell *Cell) Attr() CellAttributes {

@@ -15,8 +15,7 @@ var listFontsCmd = &cobra.Command{
 	Use:          "list-fonts",
 	Short:        "List fonts on your system which are compatible with darktile",
 	SilenceUsage: true,
-	RunE: func(c *cobra.Command, args []string) error {
-
+	RunE: func(_ *cobra.Command, _ []string) error {
 		fonts, err := fontinfo.Match(fontinfo.MatchStyle("Regular"))
 		if err != nil {
 			return err

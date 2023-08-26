@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 
@@ -39,7 +38,6 @@ func getThemePath() (string, error) {
 }
 
 func loadTheme(themePath string) (*Theme, error) {
-
 	if themePath == "" {
 		var err error
 		themePath, err = getThemePath()
@@ -52,7 +50,7 @@ func loadTheme(themePath string) (*Theme, error) {
 		return nil, &ErrorFileNotFound{Path: themePath}
 	}
 
-	themeData, err := ioutil.ReadFile(themePath)
+	themeData, err := os.ReadFile(themePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read theme file at '%s': %w", themePath, err)
 	}
@@ -80,5 +78,5 @@ func (t *Theme) Save() (string, error) {
 		return "", err
 	}
 
-	return themePath, ioutil.WriteFile(themePath, data, 0600)
+	return themePath, os.WriteFile(themePath, data, 0600)
 }

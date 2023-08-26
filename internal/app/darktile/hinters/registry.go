@@ -8,8 +8,8 @@ import (
 )
 
 type HinterRegistration struct {
-	Priority Priority
 	Hinter   Hinter
+	Priority Priority
 }
 
 type Priority uint8
@@ -33,8 +33,10 @@ type Hinter interface {
 	Click(api HintAPI) error
 }
 
-var hintLock sync.RWMutex
-var hinters []HinterRegistration
+var (
+	hintLock sync.RWMutex
+	hinters  []HinterRegistration
+)
 
 func register(h Hinter, p Priority) {
 	hintLock.Lock()

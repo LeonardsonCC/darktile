@@ -21,21 +21,21 @@ const (
 
 // Terminal communicates with the underlying terminal
 type Terminal struct {
-	mu                sync.Mutex
 	windowManipulator WindowManipulator
+	logFile           *os.File
 	pty               *os.File
 	updateChan        chan struct{}
 	processChan       chan MeasuredRune
 	closeChan         chan struct{}
-	buffers           []*Buffer
 	activeBuffer      *Buffer
-	mouseMode         MouseMode
-	mouseExtMode      MouseExtMode
-	logFile           *os.File
 	theme             *Theme
-	running           bool
-	shell             string
 	initialCommand    string
+	shell             string
+	buffers           []*Buffer
+	mouseExtMode      MouseExtMode
+	mouseMode         MouseMode
+	mu                sync.Mutex
+	running           bool
 }
 
 // NewTerminal creates a new terminal instance
@@ -132,7 +132,6 @@ func (t *Terminal) SetSize(rows, cols uint16) error {
 
 // Run starts the terminal/shell proxying process
 func (t *Terminal) Run(updateChan chan struct{}, rows uint16, cols uint16) error {
-
 	os.Setenv("TERM", "xterm-256color")
 
 	t.updateChan = updateChan
@@ -227,29 +226,29 @@ func (t *Terminal) processRunes(runes ...MeasuredRune) (renderRequired bool) {
 		t.log("%c 0x%X", r.Rune, r.Rune)
 
 		switch r.Rune {
-		case 0x05: //enq
+		case 0x05: // enq
 			continue
-		case 0x07: //bell
-			//DING DING DING
+		case 0x07: // bell
+			// DING DING DING
 			continue
-		case 0x8: //backspace
+		case 0x8: // backspace
 			t.activeBuffer.backspace()
 			renderRequired = true
-		case 0x9: //tab
+		case 0x9: // tab
 			t.activeBuffer.tab()
 			renderRequired = true
-		case 0xa, 0xc: //newLine/form feed
+		case 0xa, 0xc: // newLine/form feed
 			t.activeBuffer.newLine()
 			renderRequired = true
-		case 0xb: //vertical tab
+		case 0xb: // vertical tab
 			t.activeBuffer.verticalTab()
 			renderRequired = true
-		case 0xd: //carriageReturn
+		case 0xd: // carriageReturn
 			t.activeBuffer.carriageReturn()
 			renderRequired = true
-		case 0xe: //shiftOut
+		case 0xe: // shiftOut
 			t.activeBuffer.currentCharset = 1
-		case 0xf: //shiftIn
+		case 0xf: // shiftIn
 			t.activeBuffer.currentCharset = 0
 		default:
 			if r.Rune < 0x20 {

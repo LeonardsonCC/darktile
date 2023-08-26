@@ -6,8 +6,8 @@ import (
 )
 
 type RecoverableError struct {
-	msg   string
 	inner error
+	msg   string
 }
 
 func NewRecoverableError(msg string, cause error) *RecoverableError {

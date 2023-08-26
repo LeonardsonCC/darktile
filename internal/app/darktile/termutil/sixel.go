@@ -9,16 +9,16 @@ import (
 )
 
 type Sixel struct {
-	X      uint16
-	Y      uint64 // raw line
+	Image  image.Image
+	Y      uint64
 	Width  uint64
 	Height uint64
-	Image  image.Image
+	X      uint16
 }
 
 type VisibleSixel struct {
-	ViewLineOffset int
 	Sixel          Sixel
+	ViewLineOffset int
 }
 
 func (b *Buffer) addSixel(img image.Image, widthCells int, heightCells int) {
@@ -49,7 +49,6 @@ func (b *Buffer) clearSixelsAtRawLine(rawLine uint64) {
 }
 
 func (b *Buffer) GetVisibleSixels() []VisibleSixel {
-
 	firstLine := b.convertViewLineToRawLine(0)
 	lastLine := b.convertViewLineToRawLine(b.viewHeight - 1)
 
@@ -73,7 +72,6 @@ func (b *Buffer) GetVisibleSixels() []VisibleSixel {
 }
 
 func (t *Terminal) handleSixel(readChan chan MeasuredRune) (renderRequired bool) {
-
 	var data []rune
 
 	var inEscape bool

@@ -10,11 +10,11 @@ echo "Downloading latest release for your platform..."
 curl -s -L -H "Accept: application/octet-stream" "${asset}" --output /tmp/darktile
 echo "Installing darktile..."
 chmod +x /tmp/darktile
-installdir="${HOME}/bin/"
+installdir="${HOME}/.local/bin/"
 if [ "$EUID" -eq 0 ]; then
-  installdir="/usr/local/bin/"
+	installdir="/usr/local/bin/"
 fi
 mkdir -p $installdir
 mv /tmp/darktile "${installdir}/darktile"
-which darktile &> /dev/null || (echo "Please add ${installdir} to your PATH to complete installation!" && exit 1)
+which darktile &>/dev/null || (echo "Please add ${installdir} to your PATH to complete installation!" && exit 1)
 echo "Installation complete!"

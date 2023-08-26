@@ -14,8 +14,8 @@ var (
 )
 
 type keyState struct {
-	mu   sync.Mutex
 	keys map[ebiten.Key]press
+	mu   sync.Mutex
 }
 
 func newKeyState() *keyState {

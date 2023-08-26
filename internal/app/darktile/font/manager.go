@@ -6,10 +6,11 @@ import (
 	"math"
 	"os"
 
-	"github.com/liamg/darktile/internal/app/darktile/packed"
 	"github.com/liamg/fontinfo"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
+
+	"github.com/liamg/darktile/internal/app/darktile/packed"
 )
 
 type Style uint8
@@ -31,14 +32,14 @@ const (
 )
 
 type Manager struct {
-	family         string
 	regularFace    font.Face
 	boldFace       font.Face
 	italicFace     font.Face
 	boldItalicFace font.Face
+	family         string
+	charSize       image.Point
 	size           float64
 	dpi            float64
-	charSize       image.Point
 	fontDotDepth   int
 }
 
@@ -110,7 +111,6 @@ func (m *Manager) createFace(f *opentype.Font) (font.Face, error) {
 }
 
 func (m *Manager) SetFontByFamilyName(name string) error {
-
 	m.family = name
 
 	if name == "" {
@@ -159,7 +159,6 @@ func (m *Manager) SetFontByFamilyName(name string) error {
 }
 
 func (m *Manager) calcMetrics() error {
-
 	face := m.regularFace
 
 	var prevAdvance int
@@ -188,7 +187,6 @@ func (m *Manager) calcMetrics() error {
 }
 
 func (m *Manager) loadDefaultFonts() error {
-
 	regular, err := opentype.Parse(packed.MesloLGSNFRegularTTF)
 	if err != nil {
 		return err

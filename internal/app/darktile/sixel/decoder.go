@@ -13,13 +13,13 @@ import (
 
 type decoder struct {
 	r             io.Reader
-	cursor        image.Point
-	aspectRatio   float64 // this is the ratio for vertical:horizontal pixels
 	bg            color.Color
-	colourMap     *ColourMap
 	currentColour color.Color
-	size          image.Point // does not limit image size, just where bg is drawn!
+	colourMap     *ColourMap
 	scratchpad    map[int]map[int]color.Color
+	cursor        image.Point
+	size          image.Point
+	aspectRatio   float64
 }
 
 func Decode(reader io.Reader, bg color.Color) (image.Image, error) {
@@ -37,7 +37,6 @@ func NewDecoder(reader io.Reader, bg color.Color) *decoder {
 }
 
 func (d *decoder) Decode() (image.Image, error) {
-
 	if err := d.processHeader(); err != nil {
 		return nil, fmt.Errorf("error reading sixel header: %s", err)
 	}
@@ -74,7 +73,6 @@ func (d *decoder) readHeader() ([]byte, error) {
 }
 
 func (d *decoder) processHeader() error {
-
 	data, err := d.readHeader()
 	if err != nil {
 		return err
@@ -122,7 +120,6 @@ func (d *decoder) processHeader() error {
 }
 
 func (d *decoder) processBody() error {
-
 	for {
 
 		byt, err := d.readByte()
@@ -140,7 +137,6 @@ func (d *decoder) processBody() error {
 }
 
 func (d *decoder) handleRepeat() error {
-
 	var countStr string
 
 	for {
@@ -168,7 +164,6 @@ func (d *decoder) handleRepeat() error {
 }
 
 func (d *decoder) handleRasterAttributes() error {
-
 	var arg string
 	var args []string
 
@@ -192,11 +187,9 @@ func (d *decoder) handleRasterAttributes() error {
 			return d.processChar(b)
 		}
 	}
-
 }
 
 func (d *decoder) setRaster(args []string) error {
-
 	if len(args) != 4 {
 		return fmt.Errorf("invalid raster command: %s", strings.Join(args, ";"))
 	}
@@ -229,7 +222,6 @@ func (d *decoder) setRaster(args []string) error {
 }
 
 func (d *decoder) handleColour() error {
-
 	var arg string
 	var args []string
 
@@ -256,7 +248,6 @@ func (d *decoder) handleColour() error {
 }
 
 func (d *decoder) setColour(args []string) error {
-
 	if len(args) == 0 {
 		return fmt.Errorf("invalid colour string - missing identifier")
 	}
@@ -312,7 +303,6 @@ func (d *decoder) setColour(args []string) error {
 }
 
 func (d *decoder) processChar(b byte) error {
-
 	switch b {
 	case '!':
 		return d.handleRepeat()
@@ -370,7 +360,6 @@ func hueToRGB(v1, v2, h float64) float64 {
 }
 
 func colourFromHSL(hi, si, li int) color.Color {
-
 	h := float64(hi) / 360
 	s := float64(si) / 100
 	l := float64(li) / 100
@@ -397,7 +386,6 @@ func colourFromHSL(hi, si, li int) color.Color {
 }
 
 func (d *decoder) set(x, y int) {
-
 	if x > d.size.X {
 		d.size.X = x
 	}

@@ -4,26 +4,27 @@ import (
 	"image"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	imagefont "golang.org/x/image/font"
+
 	"github.com/liamg/darktile/internal/app/darktile/font"
 	"github.com/liamg/darktile/internal/app/darktile/gui/popup"
 	"github.com/liamg/darktile/internal/app/darktile/termutil"
-	imagefont "golang.org/x/image/font"
 )
 
 type Render struct {
-	frame           *ebiten.Image
 	screen          *ebiten.Image
 	terminal        *termutil.Terminal
 	buffer          *termutil.Buffer
 	theme           *termutil.Theme
 	fontManager     *font.Manager
-	pixelWidth      int
-	pixelHeight     int
-	font            Font
-	opacity         float64
-	popups          []popup.Message
-	enableLigatures bool
+	frame           *ebiten.Image
 	cursorImage     *ebiten.Image
+	popups          []popup.Message
+	font            Font
+	pixelWidth      int
+	opacity         float64
+	pixelHeight     int
+	enableLigatures bool
 }
 
 type Font struct {
@@ -88,7 +89,6 @@ func (r *Render) Draw() {
 
 	// // 8. apply effects (e.g. transparency)
 	r.finalise()
-
 }
 
 func (r *Render) finalise() {

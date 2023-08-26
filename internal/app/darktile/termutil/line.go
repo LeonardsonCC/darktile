@@ -3,8 +3,8 @@ package termutil
 import "strings"
 
 type Line struct {
-	wrapped bool // whether line was wrapped onto from the previous one
 	cells   []Cell
+	wrapped bool
 }
 
 func newLine() Line {
@@ -47,7 +47,6 @@ func (line *Line) shrink(width uint16) {
 }
 
 func (line *Line) wrap(width uint16) []Line {
-
 	var output []Line
 	var current Line
 

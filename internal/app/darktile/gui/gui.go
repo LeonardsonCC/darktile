@@ -8,40 +8,40 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hajimehoshi/ebiten/v2"
+
 	"github.com/liamg/darktile/internal/app/darktile/font"
 	"github.com/liamg/darktile/internal/app/darktile/gui/popup"
 	"github.com/liamg/darktile/internal/app/darktile/hinters"
 	"github.com/liamg/darktile/internal/app/darktile/termutil"
-
-	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func init() {
-	rand.Seed(time.Now().UnixNano())
+	rand.New(rand.NewSource(time.Now().UnixNano()))
 }
 
 type GUI struct {
-	mouseStateLeft      MouseState
-	mouseStateRight     MouseState
-	mouseStateMiddle    MouseState
-	mouseDrag           bool
-	size                image.Point // pixels
-	terminal            *termutil.Terminal
-	updateChan          chan struct{}
 	lastClick           time.Time
-	clickCount          int
+	updateChan          chan struct{}
+	cursorImage         *ebiten.Image
+	keyState            *keyState
 	fontManager         *font.Manager
-	mousePos            termutil.Position
-	hinters             []hinters.Hinter
-	activeHinter        int
-	popupMessages       []popup.Message
-	screenshotRequested bool
+	terminal            *termutil.Terminal
 	screenshotFilename  string
 	startupFuncs        []func(g *GUI)
-	keyState            *keyState
+	popupMessages       []popup.Message
+	hinters             []hinters.Hinter
+	mousePos            termutil.Position
+	size                image.Point
+	activeHinter        int
+	clickCount          int
 	opacity             float64
+	mouseDrag           bool
+	screenshotRequested bool
+	mouseStateMiddle    MouseState
+	mouseStateLeft      MouseState
 	enableLigatures     bool
-	cursorImage         *ebiten.Image
+	mouseStateRight     MouseState
 }
 
 type MouseState uint8
@@ -52,7 +52,6 @@ const (
 )
 
 func New(terminal *termutil.Terminal, options ...Option) (*GUI, error) {
-
 	g := &GUI{
 		terminal:        terminal,
 		size:            image.Point{80, 30},
@@ -75,7 +74,6 @@ func New(terminal *termutil.Terminal, options ...Option) (*GUI, error) {
 }
 
 func (g *GUI) Run() error {
-
 	go func() {
 		if err := g.terminal.Run(g.updateChan, uint16(g.size.X), uint16(g.size.Y)); err != nil {
 			fmt.Fprintf(os.Stderr, "Fatal error: %s", err)
@@ -116,7 +114,6 @@ func (g *GUI) CellSize() image.Point {
 }
 
 func (g *GUI) Highlight(start termutil.Position, end termutil.Position, label string, img image.Image) {
-
 	if label == "" && img == nil {
 		g.terminal.GetActiveBuffer().Highlight(start, end, nil)
 		return

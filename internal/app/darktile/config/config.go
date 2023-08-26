@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 
@@ -10,9 +9,9 @@ import (
 )
 
 type Config struct {
-	Opacity float64
-	Font    Font
 	Cursor  Cursor
+	Font    Font
+	Opacity float64
 }
 
 type Font struct {
@@ -57,7 +56,7 @@ func LoadConfig() (*Config, error) {
 		return nil, &ErrorFileNotFound{Path: configPath}
 	}
 
-	configData, err := ioutil.ReadFile(configPath)
+	configData, err := os.ReadFile(configPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read config file at '%s': %w", configPath, err)
 	}
@@ -85,5 +84,5 @@ func (c *Config) Save() (string, error) {
 		return "", err
 	}
 
-	return configPath, ioutil.WriteFile(configPath, data, 0600)
+	return configPath, os.WriteFile(configPath, data, 0600)
 }
