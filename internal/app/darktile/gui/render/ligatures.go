@@ -21,7 +21,6 @@ var ligatures = map[string]rune{
 }
 
 func (r *Render) handleLigatures(sx uint16, sy uint16, face imagefont.Face, colour color.Color) (length int) {
-
 	var candidate string
 	for x := sx; x <= sx+2; x++ {
 		cell := r.buffer.GetCell(x, sy)

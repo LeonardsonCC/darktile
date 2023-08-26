@@ -173,8 +173,6 @@ func (t *Terminal) Run(updateChan chan struct{}, rows uint16, cols uint16) error
 
 	t.running = true
 
-	t.windowManipulator.SetTitle("darktile")
-
 	if t.initialCommand != "" {
 		if err := t.WriteToPty([]byte(t.initialCommand)); err != nil {
 			return err
@@ -183,6 +181,9 @@ func (t *Terminal) Run(updateChan chan struct{}, rows uint16, cols uint16) error
 
 	_, _ = io.Copy(t, t.pty)
 	close(t.closeChan)
+
+	t.windowManipulator.SetTitle("darktile")
+
 	return nil
 }
 

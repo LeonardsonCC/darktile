@@ -9,7 +9,6 @@ import (
 )
 
 func (r *Render) drawRow(viewY int, defaultBackgroundColour color.Color, defaultForegroundColour color.Color) {
-
 	pixelY := r.font.CellSize.Y * viewY
 
 	// draw a default colour background image across the entire row background

@@ -6,7 +6,7 @@ import (
 	"math"
 	"os"
 
-	"github.com/liamg/fontinfo"
+	"github.com/adrg/sysfont"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
 
@@ -117,38 +117,19 @@ func (m *Manager) SetFontByFamilyName(name string) error {
 		return m.loadDefaultFonts()
 	}
 
-	fonts, err := fontinfo.Match(fontinfo.MatchFamily(name))
-	if err != nil {
-		return err
-	}
+	finder := sysfont.NewFinder(nil)
+	font := finder.Match(name)
 
-	if len(fonts) == 0 {
+	if font == nil {
 		return fmt.Errorf("could not find font with family '%s'", name)
 	}
 
-	for _, fontMeta := range fonts {
-		switch StyleName(fontMeta.Style) {
-		case StyleRegular:
-			m.regularFace, err = m.loadFontFace(fontMeta.Path)
-			if err != nil {
-				return err
-			}
-		case StyleBold:
-			m.boldFace, err = m.loadFontFace(fontMeta.Path)
-			if err != nil {
-				return err
-			}
-		case StyleItalic:
-			m.italicFace, err = m.loadFontFace(fontMeta.Path)
-			if err != nil {
-				return err
-			}
-		case StyleBoldItalic:
-			m.boldItalicFace, err = m.loadFontFace(fontMeta.Path)
-			if err != nil {
-				return err
-			}
-		}
+	var err error
+
+	// TODO: allow to set other font styles
+	m.regularFace, err = m.loadFontFace(font.Filename)
+	if err != nil {
+		return err
 	}
 
 	if m.regularFace == nil {

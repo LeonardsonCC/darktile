@@ -2,6 +2,7 @@ package gui
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+
 	"github.com/liamg/darktile/internal/app/darktile/termutil"
 )
 
